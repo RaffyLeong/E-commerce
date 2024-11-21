@@ -1,0 +1,23 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Start Hero Section -->
+<div class="hero">
+    <div class="container">
+       
+        </div>
+    </div>
+</div>
+<!-- End Hero Section -->
+
+
+<div class="container">
+    <h1 class="text-success">Payment Completed Successfully!</h1>
+    <div class="hr my-30 mb-30"></div>
+    <p class="mb-0 text-muted"><strong>Hey {{ request.user|title }},</strong> Thanks for our shopping at NestMart</p>
+    <p>Your order ID is: <strong>{{ order_id }}</strong></p>
+    <p>You will receive an email confirmation shortly.</p>
+    <a href="{% url 'core:index' %}" class="btn btn-fill-out">Go to Home</a>
+</div>
+{% endblock %}

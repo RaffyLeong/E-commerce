@@ -1,0 +1,55 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .card {
+        position: relative; 
+    }
+    
+    .hit-count {
+        display: block;      
+        font-weight: bold;  
+        margin-bottom: 10px; 
+        text-align: center;   
+        position: absolute;   
+        top: 10px;            
+        left: 50%;            
+        transform: translateX(-50%); 
+    }
+    
+    .card-title {
+        margin-top: 40px;    
+    }
+    .card-img-top {
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+</style>
+
+<div class="container">
+    <h1 class="my-4 text-center">Product Categories</h1>
+    <div class="row">
+        {% for category in categories %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+            {% if category.image %}
+                <img src="{{ category.image.url }}" class="card-img-top" alt="{{ category.name }}">
+                
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ category.title }}</h5>
+                    <a href="{% url 'core:category-product-list' category.cid %}"></a>
+                    <a href="{% url 'core:product-list' %}?category={{ category.slug }}" class="btn btn-primary">View Products</a>
+                    <span class="hit-count mr-10">{{ category.category.count }} Product{{ category.category.count|pluralize:"s"}}</span>
+                </div>
+            {% endif %}    
+            </div>
+        </div>
+        {% empty %}
+        <p>No categories available at this moment.</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock content %}

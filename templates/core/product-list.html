@@ -1,0 +1,93 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .product-list {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .product-item {
+        width: 250px;
+        margin: 10px;
+        border: 1px solid #ddd;
+        padding: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .product-item img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+    .product-item h3 {
+        font-size: 14px;
+        margin: 5px 0;
+    }
+    .product-item p {
+        margin: 5px 0;
+    }
+    .product-item .price {
+        font-weight: bold;
+        color: #333;
+    }
+    .product-item .old-price {
+        color: #999;
+        text-decoration: line-through;
+    }
+    .add-to-cart {
+        background-color: #3b5d50;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 1000px;
+        text-align: center;
+        display: inline-block;
+        margin-top: 20px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .add-to-cart:hover {
+        background-color: #3b5d50;
+    }
+</style>
+
+<!-- Start Hero Section -->
+<div class="hero">
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-lg-5">
+                <div class="intro-excerpt">
+                    <h1>Shop</h1>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Hero Section -->
+
+<div class="product-list">
+    {% if products %}
+    {% for product in products %}
+    <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
+        <a class="product-item" href="{% url 'core:product-detail' product.pid %}">
+            <img src="{{ product.image.url }}" class="img-fluid product-thumbnail" alt="{{ product.title }}">
+            <h3 class="product-title">{{ product.title }}</h3>
+            
+            <span class="current-product-price-{{ product.id }}">${{ product.price }}</span>
+            {% if product.old_price %}
+                <span class="old-price">${{ product.old_price }}</span>
+            {% endif %}
+        
+        </a>
+
+    </div>
+        {% endfor %}
+    {% else %}
+    <p>No products available.</p>
+    {% endif %}
+</div>
+{% endblock content %}

@@ -1,0 +1,20 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Start Hero Section -->
+<div class="hero">
+    <div class="container">
+        
+        </div>
+    </div>
+</div>
+<!-- End Hero Section -->
+
+<div class="container">
+    <h1 class="text-danger">Payment Failed!</h1>
+    <p>We're sorry, but your payment could not be processed.</p>
+    <p>Please try again or contact customer support for assistance.</p>
+    <a href="{% url 'core:checkout' %}" class="btn btn-fill-out">Try Again</a>
+</div>
+{% endblock %}

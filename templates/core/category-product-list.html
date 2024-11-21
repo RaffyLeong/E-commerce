@@ -1,0 +1,65 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .product-card {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 20px;
+        transition: transform 0.3s;
+    }
+
+    .product-card:hover {
+        transform: scale(1.05);
+    }
+
+    .product-img {
+        max-width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .product-title {
+        font-size: 1.25rem;
+        color: #3b5d50;
+    }
+
+    .product-price {
+        font-size: 1.1rem;
+        color: #6c757d;
+    }
+
+    .product-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+</style>
+
+<div class="container">
+    <h1 class="my-4 text-center">{{ category.title }} Products</h1>
+    
+    {% if products %}
+        <div class="product-list">
+            {% for product in products %}
+                <div class="product-card">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-img">
+                    {% endif %}
+                    <div class="card-body text-center">
+                        <h5 class="product-title">{{ product.name }}</h5>
+                        <p class="product-price">Price: ${{ product.price }}</p>
+                        <a href="{% url 'core:product-detail' product.id %}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">No products available in this category.</p>
+    {% endif %}
+</div>
+
+{% endblock content %}

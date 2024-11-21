@@ -1,0 +1,231 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .product-detail-container {
+        display: flex;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+    }
+    .product-main-image {
+        flex: 1;
+        min-width: 300px;
+        margin-right: 20px;
+        position: relative;
+    }
+    .product-main-image img {
+        width: 100%;
+        height: auto;
+    }
+    .product-thumbnails {
+        display: flex;
+        margin-top: 10px;
+    }
+    .product-thumbnails img {
+        width: 50px;
+        height: auto;
+        margin-right: 10px;
+        cursor: pointer;
+        border: 1px solid #ddd;
+        padding: 5px;
+    }
+    .product-thumbnails img:hover {
+        border-color: #B12704;
+    }
+    .product-info {
+        flex: 2;
+        min-width: 300px;
+    }
+    .product-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .product-price {
+        font-size: 20px;
+        color: #B12704;
+        margin-bottom: 10px;
+    }
+    .old-price {
+        text-decoration: line-through;
+        color: #999;
+        margin-left: 10px;
+    }
+    .product-description, .product-specifications {
+        margin-bottom: 15px;
+        font-size: 16px;
+        color: #333;
+    }
+    .options {
+        margin-top: 20px;
+    }
+    .options label {
+        font-size: 16px;
+        margin-right: 10px;
+    }
+    .options select, .options input {
+        padding: 5px;
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+    .button-add-to-cart {
+        background-color: #3b5d50;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 1000px;
+        text-align: center;
+        display: inline-block;
+        margin-top: 20px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .button-add-to-cart:hover {
+        background-color: #3b5d50;
+    }
+    .review-section {
+        margin-top: 30px;
+        margin-left: 20px; 
+    }
+    .review {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+    .review-rating {
+        color: #FFD700; 
+    }
+    .review-date {
+        font-size: 12px;
+        color: #999;
+    }
+    .review-user {
+        font-weight: bold;
+    }
+    .rating-container {
+        display: flex;
+        align-items: center;
+        margin-left: 20px; /* Aligns items vertically in the center */
+    }
+    .form-contact {
+        margin-left: 20px;
+    }
+    .buy-button {
+        margin-left: 20px;
+    }
+</style>
+
+<div class="product-detail-container">
+    <div class="product-main-image">
+        <img id="mainImage" src="{{ product.image.url }}" alt="{{ product.title }}">
+        <div class="product-thumbnails">
+            <img src="{{ product.image.url }}" alt="{{ product.title }}" onclick="document.getElementById('mainImage').src=this.src;">
+            {% for image in p_image %}
+            <img src="{{ image.image.url }}" alt="product image" onclick="document.getElementById('mainImage').src=this.src;">
+            {% endfor %}
+        </div>
+    </div>
+    <div class="product-info">
+        <h1 class="product-title">{{ product.title }}</h1>
+        <div>
+            <span>$</span><span class="current-price current-product-price-{{ product.id }} text-brand">{{ product.price }}</span>
+            {% if product.old_price %}
+            <span class="old-price">${{ product.old_price }}</span>
+            {% endif %}
+        </div>
+        <div class="options">
+            <label for="size">Choose Size:</label>
+            <select id="size" name="size">
+                <option value="small">Small</option>
+                <option value="medium">Medium</option>
+                <option value="large">Large</option>
+            </select>
+        </div>
+        <div class="options">
+            <label for="color">Choose Color:</label>
+            <select id="color" name="color">
+                <option value="red">White</option>
+                <option value="blue">Black</option>
+            </select>
+        </div>
+        <div class="options">
+            
+            <input type="number" value="1" name="quantity" class="w-25 mb-10 product-quantity-{{ product.id }}">
+            <input type="hidden" class="product-id-{{ product.id }}" value="{{ product.id }}">
+            <input type="hidden" class="product-title-{{ product.id }}" value="{{ product.title }}">
+            <input type="hidden" class="product-pid-{{ product.id }}" value="{{ product.pid }}">
+            <input type="hidden" class="product-image-{{ product.id }}" value="{{ product.image.url }}">
+            <input type="hidden" class="current-product-price-{{ product.id }}" value="{{ product.price }}">
+            
+            
+            <button type="button" class="button button-add-to-cart add-to-cart-btn" style="border: none;" data-index="{{ product.id }}">Add to cart</button>
+        </div>
+        
+        <p class="product-description">{{ product.description|safe }}</p>
+        <p class="product-specifications">Specifications: {{ product.specifications|safe }}</p>
+        <p>Status: {{ product.get_product_status_display }}</p>
+        
+    </div>
+</div> 
+
+<!-- Review Section -->
+<div class="review-section">
+    <h2>Reviews</h2>
+    {% for r in reviews %}
+        <div class="review">
+            <p class="review-user">{{ r.user.username|title }} 
+                <span class="review-rating">
+                    {% for i in "12345" %}
+                        {% if i <= r.rating|stringformat:"s" %} 
+                            ★
+                        {% else %}
+                            ✩
+                        {% endif %}
+                    {% endfor %}
+                </span>
+            </p>
+            <p class="review-date">{{ r.date|date:"D M, Y" }}</p>
+            <p>{{ r.review }}</p>
+        </div>
+    {% empty %}
+        <p>No reviews yet.</p>
+    {% endfor %}
+</div>
+{% if user.is_authenticated %}
+    <form method="POST" class="form-contact hide-comment-form" action="{% url 'core:ajax-add-review' product.id %}">
+        {% csrf_token %}
+        <div>
+            <label for="rating">Rating:</label>
+            <select id="rating" name="rating">
+                <option value="1">1 Star</option>
+                <option value="2">2 Stars</option>
+                <option value="3">3 Stars</option>
+                <option value="4">4 Stars</option>
+                <option value="5">5 Stars</option>
+            </select>
+        </div>
+        <div>
+            <label for="review">Review:</label>
+            <textarea id="review" name="review" rows="4" cols="50" required></textarea>
+        </div>
+        <button type="submit" class="buy-button">Submit Review</button>
+    </form>
+{% else %}
+    <p>You must be logged in to submit a review.</p>
+{% endif %}
+</div> 
+
+<script>
+    
+</script>
+{% endblock content %}
+
+{% block scripts %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/function.js' %}"></script>
+{% endblock scripts %}
